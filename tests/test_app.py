@@ -4,6 +4,7 @@ from src.app import app
 
 client = TestClient(app)
 
+
 def test_get_activities():
     response = client.get("/activities")
     assert response.status_code == 200
@@ -11,6 +12,7 @@ def test_get_activities():
     assert "Chess Club" in data
     assert "Programming Class" in data
     assert "Gym Class" in data
+
 
 def test_signup_for_activity():
     email = "newstudent@mergington.edu"
@@ -22,6 +24,7 @@ def test_signup_for_activity():
     get_resp = client.get("/activities")
     assert email in get_resp.json()[activity]["participants"]
 
+
 def test_unregister_participant():
     email = "newstudent@mergington.edu"
     activity = "Chess Club"
@@ -32,10 +35,12 @@ def test_unregister_participant():
     get_resp = client.get("/activities")
     assert email not in get_resp.json()[activity]["participants"]
 
+
 def test_signup_invalid_activity():
     response = client.post("/activities/Nonexistent/signup?email=test@mergington.edu")
     assert response.status_code == 404
     assert response.json()["detail"] == "Activity not found"
+
 
 def test_unregister_invalid_participant():
     response = client.delete("/activities/Chess Club/unregister?email=notfound@mergington.edu")
