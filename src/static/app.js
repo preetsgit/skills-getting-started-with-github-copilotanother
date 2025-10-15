@@ -20,19 +20,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const spotsLeft = details.max_participants - details.participants.length;
 
-        // Participants list with delete icon
-        let participantsHtml = '<div class="participants-list">';
-        details.participants.forEach(email => {
-          participantsHtml += `<span class="participant-item">${email} <button class="delete-participant" title="Remove" data-activity="${name}" data-email="${email}">&#128465;</button></span>`;
-        });
-        participantsHtml += '</div>';
+        // Build participants list HTML with delete icon
+        let participantsHTML = "";
+        if (details.participants.length > 0) {
+          participantsHTML = `
+            <div class="participants-section">
+              <strong>Participants:</strong>
+              <div class="participants-list">
+                ${details.participants.map(email => `
+                  <span class="participant-item">${email} <button class="delete-participant" title="Remove" data-activity="${name}" data-email="${email}">&#128465;</button></span>
+                `).join("")}
+              </div>
+            </div>
+          `;
+        } else {
+          participantsHTML = `
+            <div class="participants-section">
+              <strong>Participants:</strong>
+              <p class="no-participants">No participants yet.</p>
+            </div>
+          `;
+        }
 
         activityCard.innerHTML = `
           <h4>${name}</h4>
           <p>${details.description}</p>
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
-          <div><strong>Participants:</strong> ${participantsHtml}</div>
+          ${participantsHTML}
         `;
 
         activitiesList.appendChild(activityCard);
